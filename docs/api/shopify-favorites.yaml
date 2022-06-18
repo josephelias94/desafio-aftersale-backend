@@ -1,0 +1,356 @@
+openapi: 3.1.0
+tags:
+  - name: favorites
+    description: Operations to manage favorites
+  - name: products
+    description: Operations to manage products
+  - name: users
+    description: Operations to manage users
+x-stoplight:
+  id: o4q62sgyyzj4j
+info:
+  title: shopify-favorites
+  version: '1.0'
+  description: 'This documentation describes the endpoints and functionalities of desafio-aftersale challenge, favorite and unfaorite shopify produtcs.'
+  contact:
+    name: José Elias Júnior
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /login:
+    post:
+      summary: Log-in an user
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    type: object
+                    required:
+                      - token
+                    properties:
+                      token:
+                        type: string
+                required:
+                  - success
+                  - data
+              examples:
+                response-post-login-200:
+                  value:
+                    success: true
+                    data:
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        '422':
+          $ref: '#/components/responses/default-error-response'
+      description: Log-in an user an get a JWT Token to use on operations who requires credentials.
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+            examples:
+              body-post-login:
+                value:
+                  email: email@email.com
+                  password: myP4$$w0rD
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      tags:
+        - users
+  /register:
+    post:
+      summary: Registering an user
+      operationId: post-register
+      responses:
+        '201':
+          $ref: '#/components/responses/default-simple-response'
+        '422':
+          $ref: '#/components/responses/default-error-response'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+            examples:
+              body-post-register:
+                value:
+                  name: John Doe
+                  email: john@doe.com
+                  password: not123
+      description: Registers a new user on the platform.
+      parameters: []
+      tags:
+        - users
+  /products:
+    get:
+      summary: List all available products
+      operationId: get-products
+      description: List all products available on Shopify platform
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    type: object
+                    required:
+                      - products
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            image_url:
+                              type: string
+                          required:
+                            - id
+                            - title
+                            - image_url
+                required:
+                  - success
+                  - data
+      tags:
+        - products
+  '/user/{userUuid}/favorites':
+    parameters:
+      - schema:
+          type: string
+        name: userUuid
+        in: path
+        required: true
+    get:
+      summary: List favorite products
+      tags:
+        - favorites
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    type: object
+                    required:
+                      - products
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            image_url:
+                              type: string
+                          required:
+                            - id
+                            - title
+                            - image_url
+                required:
+                  - success
+                  - data
+      operationId: get-user-userUuid-favorites
+      description: List all favorite products by user
+  '/user/{userUuid}/favorite/{productId}':
+    parameters:
+      - schema:
+          type: string
+        name: userUuid
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: productId
+        in: path
+        required: true
+    post:
+      summary: Favorite a single product
+      operationId: post-user-userUuid-favorite-productId
+      responses:
+        '200':
+          $ref: '#/components/responses/default-simple-response'
+        '422':
+          $ref: '#/components/responses/default-error-response'
+      description: Favorite a single product for user
+      tags:
+        - favorites
+    delete:
+      summary: Unfavorite a single product
+      operationId: delete-user-userUuid-favorite-productId
+      responses:
+        '200':
+          $ref: '#/components/responses/default-simple-response'
+        '422':
+          $ref: '#/components/responses/default-error-response'
+      description: Unfavorite a single product for user
+      tags:
+        - favorites
+  '/user/{userUuid}/favorite/add':
+    parameters:
+      - schema:
+          type: string
+        name: userUuid
+        in: path
+        required: true
+    post:
+      summary: Favorite mutiple products
+      operationId: post-user-userUuid-favorite-add
+      responses:
+        '200':
+          description: OK
+        '422':
+          $ref: '#/components/responses/default-simple-response'
+      description: Favorite multiple produtcs at same time for an user
+      requestBody:
+        $ref: '#/components/requestBodies/default-array-product-id'
+      tags:
+        - favorites
+  '/user/{userUuid}/favorite/remove':
+    parameters:
+      - schema:
+          type: string
+        name: userUuid
+        in: path
+        required: true
+    post:
+      summary: Unfavorite mutiple products
+      operationId: post-user-userUuid-favorite-remove
+      responses:
+        '200':
+          $ref: '#/components/responses/default-simple-response'
+        '422':
+          $ref: '#/components/responses/default-error-response'
+      requestBody:
+        $ref: '#/components/requestBodies/default-array-product-id'
+      description: Unfavorite multiple produtcs at same time for an user
+      tags:
+        - favorites
+components:
+  schemas: {}
+  responses:
+    default-error-response:
+      description: Most common error response structure
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              sucess:
+                type: boolean
+                default: false
+              data:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+            required:
+              - sucess
+              - data
+          examples:
+            default-error-response:
+              value:
+                sucess: false
+                data:
+                  code: some-internal-error-code
+                  message: A message explaining what went wrong.
+    default-simple-response:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                default: true
+              data:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+            required:
+              - success
+              - data
+          examples:
+            default-simple-response:
+              value:
+                success: true
+                data:
+                  message: Some good message informing something good about it.
+  requestBodies:
+    default-array-product-id:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products_ids:
+                type: array
+                items:
+                  type: integer
+            required:
+              - products_ids
+          examples:
+            default-array-product-id:
+              value:
+                products_ids:
+                  - 123
+                  - 456
+                  - 789
+      description: Send an aray of product ids
