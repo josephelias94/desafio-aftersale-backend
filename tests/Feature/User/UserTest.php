@@ -12,7 +12,7 @@ it('should register a new user', function () {
     $body = [
         'name' => faker()->name,
         'email' => faker()->email,
-        'password' => 'some-password',
+        'password' => faker()->lexify('?????'),
     ];
 
     $response = postJson('/register', $body)
@@ -32,7 +32,7 @@ it('should not register a user with a repeated e-mail', function () {
     $body = [
         'name' => faker()->name,
         'email' => $user->email,
-        'password' => 'some-password',
+        'password' => faker()->lexify('?????'),
     ];
 
     $response = postJson('/register', $body)
