@@ -2,15 +2,11 @@
     "success": false,
     "data": {
         "errors": {
-            "name": [
-                "The name must be a string."
-            ],
             "email": [
                 "The email must be a valid email address."
             ],
             "password": [
-                "The password must be a string.",
-                "The password must be at least 4 characters."
+                "The password must be a string."
             ]
         }
     }

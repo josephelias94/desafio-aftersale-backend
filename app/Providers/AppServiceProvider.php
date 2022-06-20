@@ -28,16 +28,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Response::macro('errorJson', function (string $message, int $statusCode = 200, array|object $debugData = null, string|int $code = null) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'error' => [
-        //             'code' => $code,
-        //             'message' => $message,
-        //             'debugData' => $debugData
-        //         ]
-        //     ], $statusCode);
-        // });
+        Response::macro('errorJson', function (string $message, int $statusCode = 200, array|object $debugData = null, string|int $code = null) {
+            return response()->json([
+                'success' => false,
+                'error' => [
+                    'code' => $code,
+                    'message' => $message,
+                    'debugData' => $debugData
+                ]
+            ], $statusCode);
+        });
 
         Response::macro('failedValidationJson', function (Validator $validator) {
             throw new HttpResponseException(response()->json([
