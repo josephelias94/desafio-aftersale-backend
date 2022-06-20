@@ -1,0 +1,10 @@
+{
+    "success": false,
+    "data": {
+        "errors": {
+            "email": [
+                "The email must be a valid email address."
+            ]
+        }
+    }
+}
