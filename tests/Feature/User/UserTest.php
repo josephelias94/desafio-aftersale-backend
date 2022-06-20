@@ -7,6 +7,7 @@ use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, postJson};
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
 it('should register a new user', function () {
+    assertDatabaseCount('personal_access_tokens', 0);
     assertDatabaseCount('users', 0);
 
     $body = [
@@ -16,9 +17,16 @@ it('should register a new user', function () {
     ];
 
     $response = postJson('/register', $body)
-        ->assertStatus(201);
+        ->assertStatus(200)
+        ->assertJsonStructure([
+            'success',
+            'data' => [
+                'access_token',
+                'token_type',
+            ]
+        ]);
 
-    assertMatchesJsonSnapshot($response->getContent());
+    assertDatabaseCount('personal_access_tokens', 1);
     assertDatabaseHas('users', [
         'name' => $body['name'],
         'email' => $body['email']
