@@ -1,0 +1,10 @@
+{
+    "success": false,
+    "data": {
+        "errors": {
+            "name": [
+                "The name field is required."
+            ]
+        }
+    }
+}
