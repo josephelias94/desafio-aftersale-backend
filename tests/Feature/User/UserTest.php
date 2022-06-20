@@ -16,7 +16,7 @@ it('should register a new user', function () {
         'password' => faker()->lexify('?????'),
     ];
 
-    $response = postJson('/register', $body)
+    postJson('/register', $body)
         ->assertStatus(200)
         ->assertJsonStructure([
             'success',
