@@ -6,7 +6,7 @@ use function Pest\Faker\faker;
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, postJson};
 use function Spatie\Snapshots\assertMatchesJsonSnapshot;
 
-it('should register a new user', function () {
+it('should register a new user and receive a token', function () {
     assertDatabaseCount('personal_access_tokens', 0);
     assertDatabaseCount('users', 0);
 
